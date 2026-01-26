@@ -1,0 +1,96 @@
+[2024-01-20T08:00:01.234Z] INFO  - Server started on port 3000
+[2024-01-20T08:00:02.102Z] INFO  - Database connection established
+[2024-01-20T08:00:02.445Z] INFO  - Loading configuration from environment
+[2024-01-20T08:00:02.667Z] DEBUG - Cache initialized with TTL=3600s
+[2024-01-20T08:00:03.112Z] INFO  - Health check endpoint registered at /health
+[2024-01-20T08:15:22.334Z] INFO  - GET /api/users - 200 OK (12ms)
+[2024-01-20T08:15:25.441Z] INFO  - GET /api/tasks - 200 OK (8ms)
+[2024-01-20T08:15:30.112Z] DEBUG - Cache miss for tasks list
+[2024-01-20T08:22:45.667Z] INFO  - GET /api/users/1 - 200 OK (5ms)
+[2024-01-20T08:22:48.221Z] INFO  - GET /api/users/1/tasks - 200 OK (15ms)
+[2024-01-20T08:30:15.443Z] INFO  - POST /api/tasks - 201 Created (45ms)
+[2024-01-20T08:30:15.556Z] DEBUG - Stats incremented: totalTasks=4
+[2024-01-20T08:45:02.112Z] INFO  - GET /api/stats - 200 OK (3ms)
+[2024-01-20T09:00:00.001Z] INFO  - Scheduled cleanup job started
+[2024-01-20T09:00:00.445Z] DEBUG - Clearing expired sessions
+[2024-01-20T09:00:01.223Z] INFO  - Scheduled cleanup job completed (1222ms)
+[2024-01-20T09:15:33.778Z] INFO  - GET /api/users/2 - 200 OK (4ms)
+[2024-01-20T09:15:36.112Z] INFO  - GET /api/users/2/tasks - 200 OK (11ms)
+[2024-01-20T09:30:22.445Z] WARN  - Slow query detected: GET /api/tasks took 892ms
+[2024-01-20T09:30:22.446Z] DEBUG - Query plan analysis recommended
+[2024-01-20T09:45:18.334Z] INFO  - GET /api/tasks/1 - 200 OK (4ms)
+[2024-01-20T10:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T10:00:00.112Z] INFO  - Active connections: 12
+[2024-01-20T10:00:00.113Z] INFO  - Requests last hour: 847
+[2024-01-20T10:00:00.114Z] INFO  - Average response time: 23ms
+[2024-01-20T10:15:45.667Z] INFO  - POST /api/tasks - 201 Created (38ms)
+[2024-01-20T10:30:12.221Z] INFO  - GET /api/users - 200 OK (9ms)
+[2024-01-20T10:30:15.334Z] DEBUG - Response compressed: 2.3KB -> 0.8KB
+[2024-01-20T10:45:28.556Z] INFO  - GET /api/users/3/tasks - 200 OK (9ms)
+[2024-01-20T11:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T11:00:00.112Z] INFO  - Active connections: 18
+[2024-01-20T11:00:00.113Z] INFO  - Requests last hour: 923
+[2024-01-20T11:00:00.114Z] INFO  - Average response time: 19ms
+[2024-01-20T11:15:33.445Z] INFO  - PATCH /api/tasks/2/status - 200 OK (22ms)
+[2024-01-20T11:30:41.778Z] INFO  - GET /api/tasks - 200 OK (7ms)
+[2024-01-20T11:45:22.112Z] DEBUG - Garbage collection completed (45ms)
+[2024-01-20T12:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T12:00:00.112Z] INFO  - Active connections: 24
+[2024-01-20T12:00:00.113Z] INFO  - Requests last hour: 1102
+[2024-01-20T12:15:18.334Z] INFO  - GET /api/users/1 - 200 OK (3ms)
+[2024-01-20T12:15:21.445Z] INFO  - GET /api/users/1/tasks - 200 OK (8ms)
+[2024-01-20T12:30:55.221Z] INFO  - POST /api/tasks - 201 Created (41ms)
+[2024-01-20T12:45:33.667Z] INFO  - GET /api/stats - 200 OK (2ms)
+[2024-01-20T13:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T13:00:00.112Z] INFO  - Active connections: 31
+[2024-01-20T13:00:00.113Z] INFO  - Requests last hour: 1287
+[2024-01-20T13:15:42.778Z] INFO  - GET /api/tasks/3 - 200 OK (5ms)
+[2024-01-20T13:30:18.112Z] WARN  - Rate limit warning: client 192.168.1.45 at 80% threshold
+[2024-01-20T13:45:55.334Z] INFO  - GET /api/users/2 - 200 OK (4ms)
+[2024-01-20T14:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T14:00:00.112Z] INFO  - Active connections: 28
+[2024-01-20T14:00:00.113Z] INFO  - Requests last hour: 1156
+[2024-01-20T14:00:00.114Z] INFO  - Average response time: 21ms
+[2024-01-20T14:15:22.445Z] INFO  - GET /api/tasks - 200 OK (6ms)
+[2024-01-20T14:30:01.887Z] INFO  - GET /api/tasks/1 - 200 OK (4ms)
+[2024-01-20T14:30:10.443Z] INFO  - GET /api/users - 200 OK (9ms)
+[2024-01-20T14:32:15.123Z] ERROR - GET /api/users/999/tasks - 500 Internal Server Error
+[2024-01-20T14:32:15.124Z] ERROR - TypeError: Cannot read properties of undefined (reading 'id')
+    at getUserTasks (/app/src/users.js:23:52)
+    at router (/app/src/router.js:38:19)
+    at Server.<anonymous> (/app/src/index.js:10:26)
+[2024-01-20T14:32:18.556Z] INFO  - GET /api/tasks - 200 OK (7ms)
+[2024-01-20T14:32:22.112Z] INFO  - GET /api/users/1 - 200 OK (4ms)
+[2024-01-20T14:45:33.778Z] INFO  - POST /api/tasks - 201 Created (39ms)
+[2024-01-20T14:45:58.221Z] INFO  - GET /api/stats - 200 OK (2ms)
+[2024-01-20T15:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T15:00:00.112Z] INFO  - Active connections: 22
+[2024-01-20T15:00:00.113Z] INFO  - Requests last hour: 1034
+[2024-01-20T15:15:42.334Z] INFO  - PATCH /api/tasks/3/status - 200 OK (18ms)
+[2024-01-20T15:30:18.667Z] INFO  - GET /api/users/3/tasks - 200 OK (9ms)
+[2024-01-20T15:33:12.443Z] ERROR - GET /api/users/0/tasks - 500 Internal Server Error
+[2024-01-20T15:33:12.444Z] ERROR - TypeError: Cannot read properties of undefined (reading 'id')
+    at getUserTasks (/app/src/users.js:23:52)
+    at router (/app/src/router.js:38:19)
+    at Server.<anonymous> (/app/src/index.js:10:26)
+[2024-01-20T15:33:18.112Z] INFO  - GET /api/users/3/tasks - 200 OK (8ms)
+[2024-01-20T15:45:25.889Z] INFO  - GET /api/tasks - 200 OK (6ms)
+[2024-01-20T15:45:30.445Z] DEBUG - Response cached for 60s
+[2024-01-20T16:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T16:00:00.112Z] INFO  - Active connections: 19
+[2024-01-20T16:00:00.113Z] INFO  - Requests last hour: 891
+[2024-01-20T16:15:42.778Z] INFO  - POST /api/tasks - 201 Created (44ms)
+[2024-01-20T16:30:22.221Z] INFO  - GET /api/users - 200 OK (8ms)
+[2024-01-20T16:34:02.334Z] ERROR - GET /api/users/500/tasks - 500 Internal Server Error
+[2024-01-20T16:34:02.335Z] ERROR - TypeError: Cannot read properties of undefined (reading 'id')
+    at getUserTasks (/app/src/users.js:23:52)
+    at router (/app/src/router.js:38:19)
+    at Server.<anonymous> (/app/src/index.js:10:26)
+[2024-01-20T16:34:10.112Z] INFO  - GET /api/stats - 200 OK (3ms)
+[2024-01-20T16:45:15.667Z] INFO  - GET /api/tasks/3 - 200 OK (5ms)
+[2024-01-20T16:45:18.221Z] DEBUG - Cache hit ratio: 67%
+[2024-01-20T17:00:00.001Z] INFO  - Hourly metrics snapshot
+[2024-01-20T17:00:00.112Z] INFO  - Active connections: 14
+[2024-01-20T17:00:00.113Z] INFO  - Requests last hour: 756
+[2024-01-20T17:00:00.114Z] INFO  - Average response time: 18ms
+[2024-01-20T17:00:00.115Z] INFO  - Errors last hour: 3

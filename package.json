@@ -1,0 +1,15 @@
+{
+  "name": "ai-training-practical-two",
+  "version": "1.0.0",
+  "description": "Bug-hunting exercise for AI Engineering Bootcamp",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js",
+    "test:watch": "node --test --watch src/**/*.test.js"
+  },
+  "keywords": ["training", "ai", "debugging"],
+  "author": "Rational Partners",
+  "license": "MIT"
+}
