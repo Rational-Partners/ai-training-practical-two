@@ -114,6 +114,38 @@ describe('Stats', () => {
       assert.strictEqual(final, initial + 1);
     });
 
+    it('should maintain consistency under concurrent increments', async () => {
+      const initial = getStats().totalTasks;
+      const concurrentCount = 10;
+
+      // Fire all increments concurrently
+      await Promise.all(
+        Array.from({ length: concurrentCount }, () => incrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + concurrentCount);
+    });
+
+    it('should maintain consistency under concurrent mixed operations', async () => {
+      const initial = getStats().totalTasks;
+
+      // 5 increments and 3 decrements concurrently
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 2); // 5 increments - 3 decrements
+    });
+
     it('should maintain consistency after many sequential operations', async () => {
       const initial = getStats().totalTasks;
 

@@ -79,6 +79,16 @@ describe('Users', () => {
       });
     });
 
+    it('should return empty array for non-existent user', () => {
+      const tasks = getUserTasks(999);
+      assert.ok(Array.isArray(tasks));
+      assert.strictEqual(tasks.length, 0);
+    });
+
+    it('should not throw for non-existent user', () => {
+      assert.doesNotThrow(() => getUserTasks(999));
+    });
+
     it('should return different tasks for different users', () => {
       const tasks1 = getUserTasks(1);
       const tasks2 = getUserTasks(2);
