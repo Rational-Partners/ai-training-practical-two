@@ -81,7 +81,8 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.success);
+      assert.ok(result.task);
     });
 
     it('should create a task and increment stats', async () => {
@@ -114,9 +115,18 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      // Check the task was created (in the data wrapper or directly)
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.priority, 'medium');
+      assert.strictEqual(result.task.priority, 'medium');
+    });
+
+    it('should return response with task property containing id', async () => {
+      const result = await createTask({
+        title: 'Response shape test',
+        assigneeId: 1,
+      });
+
+      assert.ok(result.task, 'response should have a "task" property');
+      assert.ok(result.task.id, 'task should have an id');
+      assert.strictEqual(result.success, true);
     });
 
     it('should set status to pending for new tasks', async () => {
@@ -125,8 +135,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.status, 'pending');
+      assert.strictEqual(result.task.status, 'pending');
     });
   });
 
