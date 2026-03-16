@@ -1,7 +1,7 @@
 import http from 'node:http';
 import os from 'node:os';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.BACKEND_PORT || process.env.PORT || 3000;
 const POLL_INTERVAL = 500;
 const TIMEOUT = 30_000;
 
