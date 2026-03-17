@@ -81,7 +81,19 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id);
+    });
+
+    it('should return the task object directly (not wrapped in data envelope)', async () => {
+      const result = await createTask({
+        title: 'Envelope test',
+        assigneeId: 1,
+      });
+
+      assert.ok(result.id, 'result.id should exist at the top level');
+      assert.strictEqual(result.data, undefined, 'result.data should not exist');
+      assert.strictEqual(result.success, undefined, 'result.success should not exist');
+      assert.strictEqual(result.title, 'Envelope test');
     });
 
     it('should create a task and increment stats', async () => {
@@ -115,7 +127,7 @@ describe('Tasks', () => {
       });
 
       // Check the task was created (in the data wrapper or directly)
-      const taskData = result.data || result;
+      const taskData = result;
       assert.strictEqual(taskData.priority, 'medium');
     });
 
@@ -125,7 +137,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      const taskData = result.data || result;
+      const taskData = result;
       assert.strictEqual(taskData.status, 'pending');
     });
   });
