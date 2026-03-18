@@ -73,15 +73,40 @@ describe('Tasks', () => {
   });
 
   describe('createTask', () => {
-    it('should create a task with provided title', async () => {
+    it('should return response wrapped in { data, success: true }', async () => {
       const result = await createTask({
         title: 'Test Task',
         description: 'A test task',
         assigneeId: 1,
       });
 
-      assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.data, 'response should have a data property');
+      assert.strictEqual(result.success, true);
+    });
+
+    it('should not return task fields at the top level', async () => {
+      const result = await createTask({
+        title: 'Test Task',
+        assigneeId: 1,
+      });
+
+      assert.strictEqual(result.id, undefined, 'id should not be at top level');
+      assert.strictEqual(result.title, undefined, 'title should not be at top level');
+      assert.strictEqual(result.status, undefined, 'status should not be at top level');
+    });
+
+    it('should return the created task under data with required fields', async () => {
+      const result = await createTask({
+        title: 'Test Task',
+        description: 'A test task',
+        assigneeId: 1,
+      });
+
+      assert.ok(result.data.id);
+      assert.strictEqual(result.data.title, 'Test Task');
+      assert.strictEqual(result.data.assigneeId, 1);
+      assert.ok(result.data.status);
+      assert.ok(result.data.priority);
     });
 
     it('should create a task and increment stats', async () => {
@@ -114,9 +139,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      // Check the task was created (in the data wrapper or directly)
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.priority, 'medium');
+      assert.strictEqual(result.data.priority, 'medium');
     });
 
     it('should set status to pending for new tasks', async () => {
@@ -125,8 +148,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.status, 'pending');
+      assert.strictEqual(result.data.status, 'pending');
     });
   });
 

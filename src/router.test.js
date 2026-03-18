@@ -128,6 +128,40 @@ describe('Router', () => {
     });
   });
 
+  describe('POST /api/tasks', () => {
+    it('should return 201 status', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'Test task', assigneeId: 1 });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+    });
+
+    it('should wrap response in { data, success: true }', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'Test task', assigneeId: 1 });
+      const result = await router(req);
+
+      assert.ok(result.body.data, 'response should have a data property');
+      assert.strictEqual(result.body.success, true);
+    });
+
+    it('should return the created task under data', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'Test task', assigneeId: 1 });
+      const result = await router(req);
+
+      assert.ok(result.body.data.id, 'data.id should exist');
+      assert.strictEqual(result.body.data.title, 'Test task');
+      assert.strictEqual(result.body.data.assigneeId, 1);
+    });
+
+    it('should not expose task fields at the top level of body', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'Test task', assigneeId: 1 });
+      const result = await router(req);
+
+      assert.strictEqual(result.body.id, undefined, 'id should not be at top level');
+      assert.strictEqual(result.body.title, undefined, 'title should not be at top level');
+    });
+  });
+
   describe('GET /api/stats', () => {
     it('should return stats object', async () => {
       const req = mockRequest('GET', '/api/stats');
