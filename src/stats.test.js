@@ -130,5 +130,37 @@ describe('Stats', () => {
       const final = getStats().totalTasks;
       assert.strictEqual(final, initial + 3);
     });
+
+    it('should correctly count 5 concurrent increments', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 5);
+    });
+
+    it('should correctly count 10 concurrent increments', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all(Array.from({ length: 10 }, () => incrementTaskCount()));
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 10);
+    });
+
+    it('should correctly count concurrent increments and decrements', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+      ]);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 2);
+    });
   });
 });
