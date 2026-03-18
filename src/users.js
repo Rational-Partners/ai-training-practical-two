@@ -20,8 +20,8 @@ function getUserById(id) {
  */
 function getUserTasks(userId) {
   const user = users.find(u => u.id === userId);
-  const userTasks = tasks.filter(t => t.assigneeId === user.id);
-  return userTasks;
+  if (!user) return null;
+  return tasks.filter(t => t.assigneeId === user.id);
 }
 
 module.exports = { getUsers, getUserById, getUserTasks };

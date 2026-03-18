@@ -57,6 +57,16 @@ describe('Users', () => {
   });
 
   describe('getUserTasks', () => {
+    it('should return null for non-existent user', () => {
+      const result = getUserTasks(999);
+      assert.strictEqual(result, null);
+    });
+
+    it('should return null for user id 0', () => {
+      const result = getUserTasks(0);
+      assert.strictEqual(result, null);
+    });
+
     it('should return tasks for user 1', () => {
       const tasks = getUserTasks(1);
       assert.ok(Array.isArray(tasks));
