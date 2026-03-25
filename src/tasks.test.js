@@ -81,7 +81,7 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id);
     });
 
     it('should create a task and increment stats', async () => {
@@ -114,9 +114,14 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      // Check the task was created (in the data wrapper or directly)
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.priority, 'medium');
+      assert.strictEqual(result.priority, 'medium');
+    });
+
+    it('should return the task object directly, not wrapped in data', async () => {
+      const result = await createTask({ title: 'Wrapper test', assigneeId: 1 });
+      assert.ok(result.id);
+      assert.strictEqual(result.data, undefined);
+      assert.strictEqual(result.success, undefined);
     });
 
     it('should set status to pending for new tasks', async () => {
@@ -125,8 +130,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.status, 'pending');
+      assert.strictEqual(result.status, 'pending');
     });
   });
 
