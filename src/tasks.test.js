@@ -130,6 +130,39 @@ describe('Tasks', () => {
     });
   });
 
+  describe('createTask - concurrency', () => {
+    it('should maintain correct stats when creating tasks concurrently', async () => {
+      const beforeCount = getStats().totalTasks;
+      const concurrentTasks = 5;
+
+      // Simulate the bulk operation from the logs: 5 concurrent POST /api/tasks
+      await Promise.all(
+        Array.from({ length: concurrentTasks }, (_, i) =>
+          createTask({ title: `Concurrent Task ${i}`, assigneeId: 1 })
+        )
+      );
+
+      const afterCount = getStats().totalTasks;
+      assert.strictEqual(afterCount, beforeCount + concurrentTasks,
+        `Expected stats to count all ${concurrentTasks} tasks, but only counted ${afterCount - beforeCount}`
+      );
+    });
+
+    it('should create all tasks with unique IDs when created concurrently', async () => {
+      const results = await Promise.all(
+        Array.from({ length: 5 }, (_, i) =>
+          createTask({ title: `Unique ID Task ${i}`, assigneeId: 1 })
+        )
+      );
+
+      const ids = results.map(r => (r.data || r).id);
+      const uniqueIds = new Set(ids);
+      assert.strictEqual(uniqueIds.size, ids.length,
+        `Expected ${ids.length} unique IDs but got ${uniqueIds.size} — duplicate IDs assigned`
+      );
+    });
+  });
+
   describe('updateTaskStatus', () => {
     it('should update task status', async () => {
       const task = await updateTaskStatus(2, 'completed');

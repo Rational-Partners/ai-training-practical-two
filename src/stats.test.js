@@ -130,5 +130,92 @@ describe('Stats', () => {
       const final = getStats().totalTasks;
       assert.strictEqual(final, initial + 3);
     });
+
+    it('should maintain consistency under concurrent increments', async () => {
+      const initial = getStats().totalTasks;
+      const concurrentOps = 10;
+
+      // Fire 10 increments at the same time — simulates high-traffic burst
+      await Promise.all(
+        Array.from({ length: concurrentOps }, () => incrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + concurrentOps,
+        `Expected ${initial + concurrentOps} but got ${final} — lost ${initial + concurrentOps - final} increments due to race condition`
+      );
+    });
+
+    it('should maintain consistency under concurrent decrements', async () => {
+      // First, sequentially add tasks so we have room to decrement
+      for (let i = 0; i < 10; i++) {
+        await incrementTaskCount();
+      }
+      const before = getStats().totalTasks;
+      const concurrentOps = 5;
+
+      // Fire 5 decrements at the same time
+      await Promise.all(
+        Array.from({ length: concurrentOps }, () => decrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, before - concurrentOps,
+        `Expected ${before - concurrentOps} but got ${final} — lost ${Math.abs(before - concurrentOps - final)} decrements due to race condition`
+      );
+    });
+
+    it('should maintain consistency under mixed concurrent increments and decrements', async () => {
+      // Set up a known starting point with some headroom
+      for (let i = 0; i < 5; i++) {
+        await incrementTaskCount();
+      }
+      const before = getStats().totalTasks; // 8
+
+      // Fire 8 increments and 4 decrements concurrently — net +4
+      await Promise.all([
+        ...Array.from({ length: 8 }, () => incrementTaskCount()),
+        ...Array.from({ length: 4 }, () => decrementTaskCount()),
+      ]);
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, before + 4,
+        `Expected ${before + 4} but got ${final} — race condition in mixed operations`
+      );
+    });
+
+    it('should handle a large burst of concurrent operations', async () => {
+      const initial = getStats().totalTasks;
+      const concurrentOps = 25;
+
+      await Promise.all(
+        Array.from({ length: concurrentOps }, () => incrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + concurrentOps,
+        `Expected ${initial + concurrentOps} but got ${final} — lost ${initial + concurrentOps - final} increments in large burst`
+      );
+    });
+
+    it('should work correctly for sequential operations after concurrent ones', async () => {
+      const initial = getStats().totalTasks;
+
+      // Concurrent burst first
+      await Promise.all(
+        Array.from({ length: 5 }, () => incrementTaskCount())
+      );
+
+      // Then sequential operations — lock should not be stuck
+      await incrementTaskCount();
+      await incrementTaskCount();
+      await decrementTaskCount();
+
+      // 5 concurrent + 2 sequential increments - 1 decrement = net +6
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 6,
+        'Lock appears to be stuck after concurrent operations'
+      );
+    });
   });
 });
