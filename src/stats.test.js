@@ -114,6 +114,19 @@ describe('Stats', () => {
       assert.strictEqual(final, initial + 1);
     });
 
+    it('should correctly count concurrent increments', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 5);
+    });
+
     it('should maintain consistency after many sequential operations', async () => {
       const initial = getStats().totalTasks;
 
