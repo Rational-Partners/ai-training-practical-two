@@ -81,7 +81,8 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id);
+      assert.ok(result.title);
     });
 
     it('should create a task and increment stats', async () => {
@@ -106,6 +107,17 @@ describe('Tasks', () => {
 
       const afterCount = getStats().totalTasks;
       assert.strictEqual(afterCount, beforeCount + 3);
+    });
+
+    it('should return task directly (not wrapped in data property)', async () => {
+      const result = await createTask({
+        title: 'Direct return test',
+        assigneeId: 1,
+      });
+
+      assert.ok(result.id, 'Result should have id directly, not wrapped in data');
+      assert.ok(result.title);
+      assert.strictEqual(result.data, undefined, 'Result should not have a data wrapper');
     });
 
     it('should set default priority to medium', async () => {

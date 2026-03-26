@@ -81,6 +81,14 @@ describe('Router', () => {
       assert.ok(result.body);
       assert.ok(Array.isArray(result.body));
     });
+
+    it('should return 404 when user not found', async () => {
+      const req = mockRequest('GET', '/api/users/999/tasks');
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.ok(result.body.error);
+    });
   });
 
   describe('GET /api/tasks', () => {
