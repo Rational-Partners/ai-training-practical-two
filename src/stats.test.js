@@ -120,6 +120,15 @@ describe('Stats', () => {
       const final = getStats().totalTasks;
       assert.strictEqual(final, initial + 5);
     });
+
+    it('should count all increments in a bulk import scenario', async () => {
+      const initial = getStats().totalTasks;
+
+      await Promise.all(Array.from({ length: 10 }, () => incrementTaskCount()));
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 10);
+    });
   });
 
   describe('integration', () => {
