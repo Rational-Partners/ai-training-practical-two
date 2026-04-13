@@ -130,5 +130,84 @@ describe('Stats', () => {
       const final = getStats().totalTasks;
       assert.strictEqual(final, initial + 3);
     });
+
+    it('should maintain consistency with concurrent increments', async () => {
+      const initial = getStats().totalTasks;
+
+      // Fire 5 increments concurrently (simulates bulk task creation)
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 5);
+    });
+
+    it('should maintain consistency with concurrent mixed operations', async () => {
+      const initial = getStats().totalTasks;
+
+      // Fire concurrent increments and decrements
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 3);
+    });
+
+    it('should maintain consistency with 10 concurrent increments (bulk import)', async () => {
+      const initial = getStats().totalTasks;
+
+      await Promise.all(
+        Array.from({ length: 10 }, () => incrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 10);
+    });
+
+    it('should maintain consistency with rapid sequential then concurrent ops', async () => {
+      const initial = getStats().totalTasks;
+
+      // Sequential first
+      await incrementTaskCount();
+      await incrementTaskCount();
+
+      // Then concurrent burst
+      await Promise.all([
+        incrementTaskCount(),
+        decrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+
+      // 2 sequential + (3 inc - 1 dec) concurrent = 4
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 4);
+    });
+
+    it('should handle all decrements concurrently without going below expected', async () => {
+      // Increment 5 first
+      for (let i = 0; i < 5; i++) {
+        await incrementTaskCount();
+      }
+      const afterInc = getStats().totalTasks;
+
+      // Decrement 5 concurrently
+      await Promise.all(
+        Array.from({ length: 5 }, () => decrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, afterInc - 5);
+    });
   });
 });

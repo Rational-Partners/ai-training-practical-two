@@ -81,7 +81,8 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id);
+      assert.strictEqual(result.title, 'Test Task');
     });
 
     it('should create a task and increment stats', async () => {
@@ -127,6 +128,75 @@ describe('Tasks', () => {
 
       const taskData = result.data || result;
       assert.strictEqual(taskData.status, 'pending');
+    });
+
+    it('should return the task directly, not wrapped in a data envelope', async () => {
+      const result = await createTask({
+        title: 'Envelope test',
+        assigneeId: 1,
+      });
+
+      assert.ok(result.id, 'result should have id at top level');
+      assert.ok(result.title, 'result should have title at top level');
+      assert.strictEqual(result.title, 'Envelope test');
+      assert.strictEqual(result.data, undefined, 'result should not have a data wrapper');
+      assert.strictEqual(result.success, undefined, 'result should not have a success field');
+    });
+
+    it('should include a valid createdAt timestamp', async () => {
+      const before = new Date().toISOString();
+      const result = await createTask({ title: 'Timestamp test', assigneeId: 1 });
+      const after = new Date().toISOString();
+
+      assert.ok(result.createdAt);
+      assert.ok(result.createdAt >= before);
+      assert.ok(result.createdAt <= after);
+    });
+
+    it('should assign unique ids to each created task', async () => {
+      const task1 = await createTask({ title: 'Unique A', assigneeId: 1 });
+      const task2 = await createTask({ title: 'Unique B', assigneeId: 1 });
+      const task3 = await createTask({ title: 'Unique C', assigneeId: 2 });
+
+      assert.notStrictEqual(task1.id, task2.id);
+      assert.notStrictEqual(task2.id, task3.id);
+      assert.notStrictEqual(task1.id, task3.id);
+    });
+
+    it('should make created task retrievable via getTaskById', async () => {
+      const created = await createTask({ title: 'Findable task', assigneeId: 2 });
+      const found = getTaskById(created.id);
+
+      assert.ok(found);
+      assert.strictEqual(found.id, created.id);
+      assert.strictEqual(found.title, 'Findable task');
+    });
+
+    it('should make created task appear in getTasks list', async () => {
+      const beforeCount = getTasks().length;
+      await createTask({ title: 'Listed task', assigneeId: 1 });
+      const afterCount = getTasks().length;
+
+      assert.strictEqual(afterCount, beforeCount + 1);
+    });
+
+    it('should handle concurrent task creation without losing tasks', async () => {
+      const beforeCount = getTasks().length;
+      const beforeStats = getStats().totalTasks;
+
+      await Promise.all([
+        createTask({ title: 'Concurrent 1', assigneeId: 1 }),
+        createTask({ title: 'Concurrent 2', assigneeId: 2 }),
+        createTask({ title: 'Concurrent 3', assigneeId: 1 }),
+        createTask({ title: 'Concurrent 4', assigneeId: 3 }),
+        createTask({ title: 'Concurrent 5', assigneeId: 2 }),
+      ]);
+
+      const afterCount = getTasks().length;
+      const afterStats = getStats().totalTasks;
+
+      assert.strictEqual(afterCount, beforeCount + 5);
+      assert.strictEqual(afterStats, beforeStats + 5);
     });
   });
 
