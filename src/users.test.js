@@ -91,5 +91,31 @@ describe('Users', () => {
       const overlap = ids1.filter(id => ids2.includes(id));
       assert.strictEqual(overlap.length, 0);
     });
+
+    it('should return null for non-existent user', () => {
+      const tasks = getUserTasks(999);
+      assert.strictEqual(tasks, null);
+    });
+
+    it('should not throw when user id is 0', () => {
+      const tasks = getUserTasks(0);
+      assert.strictEqual(tasks, null);
+    });
+
+    it('should return null for negative user id', () => {
+      const tasks = getUserTasks(-1);
+      assert.strictEqual(tasks, null);
+    });
+
+    it('should return null for very large user id', () => {
+      const tasks = getUserTasks(Number.MAX_SAFE_INTEGER);
+      assert.strictEqual(tasks, null);
+    });
+
+    it('should return an empty array for user with no assigned tasks', () => {
+      const tasks = getUserTasks(3);
+      // User 3 exists but may have no tasks — result should be an array, not null
+      assert.ok(Array.isArray(tasks));
+    });
   });
 });

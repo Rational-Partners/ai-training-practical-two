@@ -81,6 +81,71 @@ describe('Router', () => {
       assert.ok(result.body);
       assert.ok(Array.isArray(result.body));
     });
+
+    it('should return 404 for non-existent user tasks', async () => {
+      const req = mockRequest('GET', '/api/users/999/tasks');
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.strictEqual(result.body.error, 'User not found');
+    });
+
+    it('should return 404 for user id 0 tasks', async () => {
+      const req = mockRequest('GET', '/api/users/0/tasks');
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.strictEqual(result.body.error, 'User not found');
+    });
+  });
+
+  describe('POST /api/tasks', () => {
+    it('should return 201 with the created task', async () => {
+      const req = mockRequest('POST', '/api/tasks', {
+        title: 'Router test task',
+        assigneeId: 1,
+      });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+      assert.ok(result.body.id);
+      assert.strictEqual(result.body.title, 'Router test task');
+    });
+
+    it('should return the task directly from the route, not wrapped', async () => {
+      const req = mockRequest('POST', '/api/tasks', {
+        title: 'Envelope route test',
+        assigneeId: 2,
+      });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+      assert.ok(result.body.id, 'response body should have id at top level');
+      assert.strictEqual(result.body.data, undefined, 'response body should not be wrapped');
+    });
+  });
+
+  describe('PATCH /api/tasks/:id/status', () => {
+    it('should update and return the task', async () => {
+      const req = mockRequest('PATCH', '/api/tasks/2/status', {
+        status: 'in_progress',
+      });
+      const result = await router(req);
+
+      assert.ok(!result.status || result.status === 200);
+      assert.strictEqual(result.body.status, 'in_progress');
+      assert.strictEqual(result.body.id, 2);
+    });
+
+    it('should return 404 for non-existent task status update', async () => {
+      const req = mockRequest('PATCH', '/api/tasks/9999/status', {
+        status: 'completed',
+      });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.ok(result.body.error);
+    });
   });
 
   describe('GET /api/tasks', () => {
