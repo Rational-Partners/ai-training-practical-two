@@ -69,6 +69,19 @@ describe('Stats', () => {
       const final = getStats().totalTasks;
       assert.strictEqual(final, initial + 3);
     });
+
+    it('should count all increments when called concurrently', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 5, 'concurrent increments must not overwrite each other');
+    });
   });
 
   describe('decrementTaskCount', () => {

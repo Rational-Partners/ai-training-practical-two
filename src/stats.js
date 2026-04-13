@@ -19,21 +19,20 @@ function getStats() {
 async function incrementTaskCount() {
   // Simulate reading from database
   await new Promise(resolve => setTimeout(resolve, 5));
-  const currentCount = stats.totalTasks;
 
   // Simulate some processing time
   await new Promise(resolve => setTimeout(resolve, 10));
 
-  // Simulate writing back to database
-  stats.totalTasks = currentCount + 1;
+  // Increment directly — no intermediate variable across await boundaries,
+  // so concurrent calls cannot overwrite each other's write.
+  stats.totalTasks++;
   stats.lastUpdated = new Date().toISOString();
 }
 
 async function decrementTaskCount() {
   await new Promise(resolve => setTimeout(resolve, 5));
-  const currentCount = stats.totalTasks;
   await new Promise(resolve => setTimeout(resolve, 10));
-  stats.totalTasks = currentCount - 1;
+  stats.totalTasks--;
   stats.lastUpdated = new Date().toISOString();
 }
 
