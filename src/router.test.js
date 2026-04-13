@@ -83,6 +83,27 @@ describe('Router', () => {
     });
   });
 
+  describe('POST /api/tasks', () => {
+    it('should return 201 with the created task', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'New Task', assigneeId: 1 });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+      assert.ok(result.body.id);
+      assert.strictEqual(result.body.title, 'New Task');
+    });
+
+    it('should return task directly without data wrapper', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'Wrapper Test', assigneeId: 1 });
+      const result = await router(req);
+
+      // Frontend reads result.id — must not be nested under result.data
+      assert.strictEqual(result.body.data, undefined);
+      assert.strictEqual(result.body.success, undefined);
+      assert.ok(result.body.id);
+    });
+  });
+
   describe('GET /api/tasks', () => {
     it('should return list of tasks', async () => {
       const req = mockRequest('GET', '/api/tasks');
