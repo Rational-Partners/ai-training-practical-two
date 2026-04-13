@@ -79,6 +79,16 @@ describe('Users', () => {
       });
     });
 
+    it('should return null when user does not exist', () => {
+      const tasks = getUserTasks(999);
+      assert.strictEqual(tasks, null);
+    });
+
+    it('should return null for user id 0', () => {
+      const tasks = getUserTasks(0);
+      assert.strictEqual(tasks, null);
+    });
+
     it('should return different tasks for different users', () => {
       const tasks1 = getUserTasks(1);
       const tasks2 = getUserTasks(2);

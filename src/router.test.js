@@ -81,6 +81,22 @@ describe('Router', () => {
       assert.ok(result.body);
       assert.ok(Array.isArray(result.body));
     });
+
+    it('should return 404 when user does not exist', async () => {
+      const req = mockRequest('GET', '/api/users/999/tasks');
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.ok(result.body.error);
+    });
+
+    it('should return 404 for user id 0', async () => {
+      const req = mockRequest('GET', '/api/users/0/tasks');
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.ok(result.body.error);
+    });
   });
 
   describe('GET /api/tasks', () => {
