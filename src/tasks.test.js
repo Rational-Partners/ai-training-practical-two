@@ -81,7 +81,8 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id);
+      assert.strictEqual(result.title, 'Test Task');
     });
 
     it('should create a task and increment stats', async () => {
@@ -127,6 +128,20 @@ describe('Tasks', () => {
 
       const taskData = result.data || result;
       assert.strictEqual(taskData.status, 'pending');
+    });
+
+    it('should return task object directly without wrapper', async () => {
+      const result = await createTask({
+        title: 'Task for format test',
+        assigneeId: 1,
+      });
+
+      // Should be a task object directly, not wrapped in { data, success }
+      assert.ok(result.id);
+      assert.ok(result.title);
+      assert.ok(result.status);
+      assert.strictEqual(result.data, undefined);
+      assert.strictEqual(result.success, undefined);
     });
   });
 
