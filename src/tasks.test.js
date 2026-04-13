@@ -81,7 +81,7 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id);
     });
 
     it('should create a task and increment stats', async () => {

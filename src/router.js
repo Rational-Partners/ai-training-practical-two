@@ -35,6 +35,8 @@ async function router(req) {
 
   if (path.match(/^\/api\/users\/\d+\/tasks$/) && method === 'GET') {
     const id = parseInt(path.split('/')[3]);
+    const user = getUserById(id);
+    if (!user) return { status: 404, body: { error: 'User not found' } };
     const tasks = getUserTasks(id);
     return { body: tasks };
   }
