@@ -81,6 +81,14 @@ describe('Router', () => {
       assert.ok(result.body);
       assert.ok(Array.isArray(result.body));
     });
+
+    it('should return 404 for non-existent user', async () => {
+      const req = mockRequest('GET', '/api/users/999/tasks');
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 404);
+      assert.ok(result.body.error);
+    });
   });
 
   describe('GET /api/tasks', () => {
@@ -109,6 +117,25 @@ describe('Router', () => {
 
       assert.strictEqual(result.status, 404);
       assert.ok(result.body.error);
+    });
+  });
+
+  describe('POST /api/tasks', () => {
+    it('should return the created task with id at the top level', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'New Task', assigneeId: 1 });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+      assert.ok(result.body.id, 'id should be at the top level');
+      assert.strictEqual(result.body.data, undefined, 'should not have a .data wrapper');
+      assert.strictEqual(result.body.success, undefined, 'should not have a .success field');
+    });
+
+    it('should return 201 status on task creation', async () => {
+      const req = mockRequest('POST', '/api/tasks', { title: 'Another Task', assigneeId: 2 });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
     });
   });
 
