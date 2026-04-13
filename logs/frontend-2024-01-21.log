@@ -1,0 +1,82 @@
+[2024-01-21T09:00:01.112Z] INFO  - Application bootstrap started
+[2024-01-21T09:00:01.234Z] DEBUG - Loading environment: production
+[2024-01-21T09:00:01.445Z] DEBUG - Feature flags loaded: { darkMode: true, betaFeatures: false }
+[2024-01-21T09:00:01.667Z] INFO  - Initializing Redux store
+[2024-01-21T09:00:01.889Z] DEBUG - Middleware registered: [thunk, logger, analytics]
+[2024-01-21T09:00:02.112Z] INFO  - React app mounted successfully
+[2024-01-21T09:00:02.334Z] DEBUG - Router initialized with 12 routes
+[2024-01-21T09:00:02.556Z] INFO  - WebSocket connection established
+[2024-01-21T09:00:02.778Z] DEBUG - Auth token validated, expires in 3592s
+[2024-01-21T09:00:03.001Z] INFO  - Initial data fetch started
+[2024-01-21T09:00:03.223Z] INFO  - GET /api/users - 200 OK (145ms)
+[2024-01-21T09:00:03.445Z] INFO  - GET /api/tasks - 200 OK (89ms)
+[2024-01-21T09:00:03.667Z] DEBUG - TaskList component mounted
+[2024-01-21T09:00:03.889Z] DEBUG - Rendered 3 tasks
+[2024-01-21T09:00:04.112Z] INFO  - Initial data fetch completed
+[2024-01-21T09:05:15.334Z] DEBUG - User interaction: clicked sidebar
+[2024-01-21T09:05:15.556Z] INFO  - Navigation: /dashboard -> /tasks
+[2024-01-21T09:05:15.778Z] DEBUG - TaskList component re-rendered
+[2024-01-21T09:10:22.112Z] DEBUG - User interaction: expanded task #2
+[2024-01-21T09:10:22.334Z] DEBUG - TaskDetail component mounted
+[2024-01-21T09:12:45.556Z] INFO  - GET /api/tasks/2 - 200 OK (34ms)
+[2024-01-21T09:15:08.778Z] DEBUG - User interaction: clicked "New Task" button
+[2024-01-21T09:15:08.889Z] DEBUG - TaskForm modal opened
+[2024-01-21T09:15:12.112Z] DEBUG - Form validation passed
+[2024-01-21T09:15:12.334Z] INFO  - Submitting new task: { title: "Update documentation", assigneeId: 1 }
+[2024-01-21T09:15:12.556Z] DEBUG - POST /api/tasks request sent
+[2024-01-21T09:15:12.891Z] DEBUG - POST /api/tasks response received (335ms)
+[2024-01-21T09:15:12.892Z] DEBUG - Response payload: {"data":{"id":100,"title":"Update documentation","description":null,"assigneeId":1,"priority":"medium","status":"pending","createdAt":"2024-01-21T09:15:12.800Z"},"success":true}
+[2024-01-21T09:15:12.893Z] ERROR - Uncaught TypeError: Cannot read properties of undefined (reading 'id')
+    at handleCreateTask (TaskForm.jsx:42:18)
+    at commitHookEffectListMount (react-dom.production.min.js:12587:26)
+    at invokePassiveEffectMountInDEV (react-dom.production.min.js:14315:11)
+[2024-01-21T09:15:12.894Z] DEBUG - Error boundary caught exception in TaskForm
+[2024-01-21T09:15:12.895Z] WARN  - Component stack trace available in React DevTools
+[2024-01-21T09:15:15.112Z] INFO  - Error reported to Sentry: evt_a8f3k2
+[2024-01-21T09:15:18.334Z] DEBUG - TaskForm modal closed by user
+[2024-01-21T09:15:22.556Z] INFO  - Navigation: /tasks -> /tasks (refresh)
+[2024-01-21T09:15:22.778Z] INFO  - GET /api/tasks - 200 OK (67ms)
+[2024-01-21T09:15:23.001Z] DEBUG - Rendered 4 tasks (was 3)
+[2024-01-21T09:15:23.002Z] DEBUG - Note: Task count increased despite UI error
+[2024-01-21T09:20:45.223Z] DEBUG - User interaction: clicked task filter
+[2024-01-21T09:20:45.445Z] DEBUG - Filter applied: status=pending
+[2024-01-21T09:20:45.667Z] DEBUG - Rendered 3 tasks (filtered)
+[2024-01-21T09:25:33.889Z] INFO  - WebSocket ping/pong successful
+[2024-01-21T09:30:18.112Z] DEBUG - Auth token refresh initiated
+[2024-01-21T09:30:18.445Z] DEBUG - New token expires in 3600s
+[2024-01-21T09:35:42.667Z] DEBUG - User interaction: clicked "New Task" button
+[2024-01-21T09:35:42.778Z] DEBUG - TaskForm modal opened
+[2024-01-21T09:35:48.889Z] INFO  - Submitting new task: { title: "Fix login page styling", assigneeId: 2 }
+[2024-01-21T09:35:49.112Z] DEBUG - POST /api/tasks response received (223ms)
+[2024-01-21T09:35:49.113Z] ERROR - Uncaught TypeError: Cannot read properties of undefined (reading 'id')
+    at handleCreateTask (TaskForm.jsx:42:18)
+    at commitHookEffectListMount (react-dom.production.min.js:12587:26)
+[2024-01-21T09:35:49.114Z] INFO  - Error reported to Sentry: evt_b2g4m7
+[2024-01-21T09:35:52.334Z] WARN  - User attempted retry, same error
+[2024-01-21T09:35:55.556Z] DEBUG - User closed modal without success confirmation
+[2024-01-21T09:40:22.778Z] INFO  - GET /api/tasks - 200 OK (54ms)
+[2024-01-21T09:40:23.001Z] DEBUG - Rendered 5 tasks
+[2024-01-21T09:40:23.002Z] DEBUG - Tasks are being created server-side successfully
+[2024-01-21T09:45:15.223Z] DEBUG - Performance mark: LCP=1.2s
+[2024-01-21T09:45:15.445Z] DEBUG - Performance mark: FID=45ms
+[2024-01-21T09:50:33.667Z] INFO  - WebSocket reconnection (planned)
+[2024-01-21T09:50:33.889Z] DEBUG - WebSocket connection re-established
+[2024-01-21T09:55:18.112Z] DEBUG - User interaction: clicked user avatar
+[2024-01-21T09:55:18.334Z] INFO  - Navigation: /tasks -> /profile
+[2024-01-21T10:00:00.001Z] INFO  - Hourly analytics flush
+[2024-01-21T10:00:00.223Z] DEBUG - Events sent: 847
+[2024-01-21T10:00:00.445Z] DEBUG - Errors logged: 2
+[2024-01-21T10:05:42.667Z] INFO  - Navigation: /profile -> /tasks
+[2024-01-21T10:10:15.889Z] DEBUG - User interaction: clicked "New Task" button
+[2024-01-21T10:10:18.112Z] INFO  - Submitting new task: { title: "Add dark mode toggle", assigneeId: 1 }
+[2024-01-21T10:10:18.445Z] ERROR - Uncaught TypeError: Cannot read properties of undefined (reading 'id')
+    at handleCreateTask (TaskForm.jsx:42:18)
+[2024-01-21T10:10:18.446Z] INFO  - Error reported to Sentry: evt_c9h2n4
+[2024-01-21T10:10:22.667Z] DEBUG - User submitted feedback via widget: "Task creation broken"
+[2024-01-21T10:10:25.889Z] INFO  - Support ticket created: TKT-4521
+[2024-01-21T10:15:33.112Z] INFO  - GET /api/tasks - 200 OK (61ms)
+[2024-01-21T10:15:33.334Z] DEBUG - Rendered 6 tasks
+[2024-01-21T10:20:45.556Z] DEBUG - Memory usage: 45.2MB (heap), 12.1MB (external)
+[2024-01-21T10:25:18.778Z] INFO  - WebSocket ping/pong successful
+[2024-01-21T10:30:00.001Z] DEBUG - Scheduled state persistence
+[2024-01-21T10:30:00.223Z] DEBUG - Local storage updated: 2.3KB

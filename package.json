@@ -1,0 +1,23 @@
+{
+  "name": "ai-training-practical-two",
+  "version": "1.0.0",
+  "description": "Bug-hunting exercise for AI Engineering Bootcamp",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "mkdir -p logs && concurrently --hide 0 --names server,banner \"node --watch src/index.js > logs/backend.log 2>&1\" \"node scripts/dev-banner.mjs\"",
+    "dev:verbose": "node --watch src/index.js",
+    "test": "node --test src/**/*.test.js",
+    "test:watch": "node --test --watch src/**/*.test.js"
+  },
+  "keywords": [
+    "training",
+    "ai",
+    "debugging"
+  ],
+  "author": "Rational Partners",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

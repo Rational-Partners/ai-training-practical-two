@@ -1,0 +1,120 @@
+{
+  "title": "AI-Assisted Bug Hunting Practical",
+  "description": "Hands-on exercises for AI-assisted debugging using Claude Code with a vanilla Node.js Task Management API",
+  "version": "1.0",
+  "ports": [
+    { "env": "BACKEND_PORT", "description": "HTTP server port" }
+  ],
+  "urls": [
+    {
+      "env": "API_BASE_URL",
+      "port": "PORT",
+      "path": "/api"
+    }
+  ],
+  "setup": {
+    "install": "npm install",
+    "env": {
+      "BACKEND_PORT": "HTTP server port (default: 3000)"
+    },
+    "requiredTools": [
+      "node",
+      "claude"
+    ],
+    "shell": {
+      "command": "claude",
+      "services": [
+        {
+          "name": "dev-server",
+          "command": "npm run dev"
+        }
+      ]
+    }
+  },
+  "exercises": [
+    {
+      "id": "01-basic-bug",
+      "title": "Basic Bug Fix",
+      "description": "Investigate a production error log, identify the bug, fix it, and write a test to prevent regression. Start here if you're new to AI-assisted debugging.",
+      "directory": ".",
+      "steps": [
+        {
+          "title": "Read the error log",
+          "instruction": "Ask Claude: 'Read the file logs/error-2024-01-20.log and explain what went wrong'"
+        },
+        {
+          "title": "Create a GitHub issue",
+          "instruction": "Ask Claude to create a GitHub issue describing the bug, its root cause, and expected behaviour"
+        },
+        {
+          "title": "Fix the bug",
+          "instruction": "Ask Claude to locate and fix the bug in the source code"
+        },
+        {
+          "title": "Write a regression test",
+          "instruction": "Ask Claude to write a test that would have caught this bug before it reached production"
+        },
+        {
+          "title": "Create a PR",
+          "instruction": "Ask Claude to create a pull request with your fix and test"
+        }
+      ]
+    },
+    {
+      "id": "02-frontend-bug",
+      "title": "Frontend Integration Bug",
+      "description": "Debug an issue reported by a frontend consumer of the API. Medium difficulty — requires understanding request/response contracts.",
+      "directory": ".",
+      "steps": [
+        {
+          "title": "Read the error log",
+          "instruction": "Ask Claude: 'Read the file logs/frontend-2024-01-21.log and explain what the frontend team is reporting'"
+        },
+        {
+          "title": "Create a GitHub issue",
+          "instruction": "Ask Claude to create a GitHub issue describing the bug with details from the log"
+        },
+        {
+          "title": "Fix the bug",
+          "instruction": "Ask Claude to find and fix the root cause in the API code"
+        },
+        {
+          "title": "Write a regression test",
+          "instruction": "Ask Claude to write a test that validates the correct behaviour"
+        },
+        {
+          "title": "Create a PR",
+          "instruction": "Ask Claude to create a pull request with your fix and test"
+        }
+      ]
+    },
+    {
+      "id": "03-async-bug",
+      "title": "Async/Monitoring Bug",
+      "description": "Investigate a subtle async bug flagged by production monitoring. Harder — requires understanding async patterns and race conditions.",
+      "directory": ".",
+      "steps": [
+        {
+          "title": "Read the monitoring log",
+          "instruction": "Ask Claude: 'Read the file logs/monitoring-2024-01-22.log and explain what the monitoring system has detected'"
+        },
+        {
+          "title": "Create a GitHub issue",
+          "instruction": "Ask Claude to create a GitHub issue describing the async bug and its potential impact"
+        },
+        {
+          "title": "Fix the bug",
+          "instruction": "Ask Claude to identify and fix the async issue in the source code"
+        },
+        {
+          "title": "Write a regression test",
+          "instruction": "Ask Claude to write a test that verifies the async behaviour works correctly"
+        },
+        {
+          "title": "Create a PR",
+          "instruction": "Ask Claude to create a pull request with your fix and test"
+        }
+      ]
+    }
+  ]
+}
