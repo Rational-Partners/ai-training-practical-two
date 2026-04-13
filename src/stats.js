@@ -17,23 +17,21 @@ function getStats() {
  * Increment task count
  */
 async function incrementTaskCount() {
-  // Simulate reading from database
+  // Simulate async processing time
   await new Promise(resolve => setTimeout(resolve, 5));
-  const currentCount = stats.totalTasks;
-
-  // Simulate some processing time
   await new Promise(resolve => setTimeout(resolve, 10));
 
-  // Simulate writing back to database
-  stats.totalTasks = currentCount + 1;
+  // Atomic increment - avoids lost updates under concurrent calls
+  stats.totalTasks++;
   stats.lastUpdated = new Date().toISOString();
 }
 
 async function decrementTaskCount() {
   await new Promise(resolve => setTimeout(resolve, 5));
-  const currentCount = stats.totalTasks;
   await new Promise(resolve => setTimeout(resolve, 10));
-  stats.totalTasks = currentCount - 1;
+
+  // Atomic decrement
+  stats.totalTasks--;
   stats.lastUpdated = new Date().toISOString();
 }
 
