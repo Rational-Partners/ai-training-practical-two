@@ -50,14 +50,15 @@ async function decrementTaskCount() {
   });
 }
 
-// For testing - reset stats
+// For testing - reset stats (serialized through mutex to avoid breaking the chain)
 function resetStats() {
-  stats = {
-    totalTasks: 3,
-    completedTasks: 0,
-    lastUpdated: new Date().toISOString(),
-  };
-  mutex = Promise.resolve();
+  return withMutex(async () => {
+    stats = {
+      totalTasks: 3,
+      completedTasks: 0,
+      lastUpdated: new Date().toISOString(),
+    };
+  });
 }
 
 module.exports = { getStats, incrementTaskCount, decrementTaskCount, resetStats };

@@ -4,8 +4,8 @@ const { getTasks, getTaskById, createTask, updateTaskStatus } = require('./tasks
 const { resetStats, getStats } = require('./stats');
 
 describe('Tasks', () => {
-  beforeEach(() => {
-    resetStats();
+  beforeEach(async () => {
+    await resetStats();
   });
 
   describe('getTasks', () => {

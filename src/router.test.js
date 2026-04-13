@@ -32,8 +32,8 @@ function mockRequest(method, url, body = null) {
 }
 
 describe('Router', () => {
-  beforeEach(() => {
-    resetStats();
+  beforeEach(async () => {
+    await resetStats();
   });
 
   describe('GET /api/users', () => {

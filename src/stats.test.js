@@ -3,8 +3,8 @@ const assert = require('node:assert');
 const { getStats, incrementTaskCount, decrementTaskCount, resetStats } = require('./stats');
 
 describe('Stats', () => {
-  beforeEach(() => {
-    resetStats();
+  beforeEach(async () => {
+    await resetStats();
   });
 
   describe('getStats', () => {
@@ -92,13 +92,13 @@ describe('Stats', () => {
     it('should reset totalTasks to initial value', async () => {
       await incrementTaskCount();
       await incrementTaskCount();
-      resetStats();
+      await resetStats();
       const stats = getStats();
       assert.strictEqual(stats.totalTasks, 3);
     });
 
     it('should reset completedTasks to 0', async () => {
-      resetStats();
+      await resetStats();
       const stats = getStats();
       assert.strictEqual(stats.completedTasks, 0);
     });
