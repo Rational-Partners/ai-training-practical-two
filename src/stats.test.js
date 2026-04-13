@@ -131,4 +131,53 @@ describe('Stats', () => {
       assert.strictEqual(final, initial + 3);
     });
   });
+
+  describe('concurrent operations', () => {
+    it('should handle 5 concurrent increments correctly', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 5);
+    });
+
+    it('should handle 10 concurrent increments correctly', async () => {
+      const initial = getStats().totalTasks;
+      const promises = Array.from({ length: 10 }, () => incrementTaskCount());
+      await Promise.all(promises);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 10);
+    });
+
+    it('should handle concurrent increments and decrements correctly', async () => {
+      const initial = getStats().totalTasks;
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 3);
+    });
+
+    it('should handle mixed sequential and concurrent operations', async () => {
+      const initial = getStats().totalTasks;
+      await incrementTaskCount();
+      await Promise.all([
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+      ]);
+      await decrementTaskCount();
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 3);
+    });
+  });
 });
