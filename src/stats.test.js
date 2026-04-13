@@ -130,5 +130,42 @@ describe('Stats', () => {
       const final = getStats().totalTasks;
       assert.strictEqual(final, initial + 3);
     });
+
+    it('should handle concurrent increments without race conditions', async () => {
+      const initial = getStats().totalTasks;
+
+      // Fire off 10 concurrent increments (simulates bulk operations)
+      const promises = [];
+      for (let i = 0; i < 10; i++) {
+        promises.push(incrementTaskCount());
+      }
+
+      // Wait for all to complete
+      await Promise.all(promises);
+
+      const final = getStats().totalTasks;
+      // All 10 increments should be counted
+      assert.strictEqual(final, initial + 10);
+    });
+
+    it('should handle mixed concurrent operations correctly', async () => {
+      const initial = getStats().totalTasks;
+
+      // Fire off 5 increments and 2 decrements concurrently
+      const promises = [
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        incrementTaskCount(),
+        decrementTaskCount(),
+        decrementTaskCount(),
+      ];
+
+      await Promise.all(promises);
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(final, initial + 3);
+    });
   });
 });
