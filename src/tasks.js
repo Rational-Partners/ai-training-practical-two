@@ -33,7 +33,7 @@ async function createTask({ title, description, assigneeId, priority = 'medium' 
   // Update stats
   await incrementTaskCount();
 
-  return { data: task, success: true };
+  return task;
 }
 
 /**
