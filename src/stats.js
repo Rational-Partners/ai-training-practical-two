@@ -53,6 +53,7 @@ function resetStats() {
     completedTasks: 0,
     lastUpdated: new Date().toISOString(),
   };
+  queue = Promise.resolve();
 }
 
 module.exports = { getStats, incrementTaskCount, decrementTaskCount, resetStats };
