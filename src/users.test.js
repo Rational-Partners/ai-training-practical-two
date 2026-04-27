@@ -91,5 +91,12 @@ describe('Users', () => {
       const overlap = ids1.filter(id => ids2.includes(id));
       assert.strictEqual(overlap.length, 0);
     });
+
+    it('should return null when user does not exist', () => {
+      // Regression: previously threw TypeError on user.id (logs/error-2024-01-20.log)
+      assert.doesNotThrow(() => getUserTasks(999));
+      assert.strictEqual(getUserTasks(999), null);
+      assert.strictEqual(getUserTasks(0), null);
+    });
   });
 });
