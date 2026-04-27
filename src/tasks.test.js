@@ -81,7 +81,9 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.strictEqual(result.title, 'Test Task');
+      assert.strictEqual(result.assigneeId, 1);
+      assert.ok(typeof result.id === 'number');
     });
 
     it('should create a task and increment stats', async () => {
@@ -114,9 +116,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      // Check the task was created (in the data wrapper or directly)
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.priority, 'medium');
+      assert.strictEqual(result.priority, 'medium');
     });
 
     it('should set status to pending for new tasks', async () => {
@@ -125,8 +125,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.status, 'pending');
+      assert.strictEqual(result.status, 'pending');
     });
   });
 

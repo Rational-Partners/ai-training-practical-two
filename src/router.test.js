@@ -94,6 +94,29 @@ describe('Router', () => {
     });
   });
 
+  describe('POST /api/tasks', () => {
+    it('should return the created task as a flat object (no data wrapper)', async () => {
+      // Regression: frontend reads response.id directly (logs/frontend-2024-01-21.log).
+      // Server was wrapping the task in { data, success: true }, breaking handleCreateTask.
+      const req = mockRequest('POST', '/api/tasks', {
+        title: 'Update documentation',
+        description: 'Document new endpoints',
+        assigneeId: 1,
+      });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+      // Top-level task fields must be present, matching the shape of GET /api/tasks/:id
+      assert.strictEqual(typeof result.body.id, 'number');
+      assert.strictEqual(result.body.title, 'Update documentation');
+      assert.strictEqual(result.body.status, 'pending');
+      assert.strictEqual(result.body.assigneeId, 1);
+      // No envelope keys
+      assert.strictEqual(result.body.data, undefined);
+      assert.strictEqual(result.body.success, undefined);
+    });
+  });
+
   describe('GET /api/tasks/:id', () => {
     it('should return task when found', async () => {
       const req = mockRequest('GET', '/api/tasks/1');
