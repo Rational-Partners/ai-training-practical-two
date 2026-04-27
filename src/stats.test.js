@@ -131,4 +131,46 @@ describe('Stats', () => {
       assert.strictEqual(final, initial + 3);
     });
   });
+
+  // Regression for monitoring-2024-01-22.log:
+  // 5 concurrent creates → stats only +3, 10 concurrent creates → stats only +5.
+  // Cause: incrementTaskCount reads, awaits, then writes back the stale read,
+  // so concurrent calls clobber each other (lost-update race).
+  describe('concurrency', () => {
+    it('should not lose increments when called concurrently', async () => {
+      const initial = getStats().totalTasks;
+      const N = 10;
+
+      await Promise.all(
+        Array.from({ length: N }, () => incrementTaskCount())
+      );
+
+      assert.strictEqual(getStats().totalTasks, initial + N);
+    });
+
+    it('should not lose decrements when called concurrently', async () => {
+      // Bring the count up so we don't go negative
+      for (let i = 0; i < 10; i++) await incrementTaskCount();
+      const initial = getStats().totalTasks;
+      const N = 5;
+
+      await Promise.all(
+        Array.from({ length: N }, () => decrementTaskCount())
+      );
+
+      assert.strictEqual(getStats().totalTasks, initial - N);
+    });
+
+    it('should produce a consistent count when increments and decrements interleave', async () => {
+      const initial = getStats().totalTasks;
+
+      const ops = [
+        ...Array.from({ length: 8 }, () => incrementTaskCount()),
+        ...Array.from({ length: 3 }, () => decrementTaskCount()),
+      ];
+      await Promise.all(ops);
+
+      assert.strictEqual(getStats().totalTasks, initial + 5);
+    });
+  });
 });
