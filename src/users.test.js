@@ -91,5 +91,10 @@ describe('Users', () => {
       const overlap = ids1.filter(id => ids2.includes(id));
       assert.strictEqual(overlap.length, 0);
     });
+
+    it('should return null when user does not exist (regression: was crashing with TypeError)', () => {
+      assert.strictEqual(getUserTasks(999), null);
+      assert.strictEqual(getUserTasks(0), null);
+    });
   });
 });

@@ -16,12 +16,13 @@ function getUserById(id) {
 }
 
 /**
- * Get all tasks assigned to a user
+ * Get all tasks assigned to a user.
+ * Returns null if the user does not exist so the caller can respond with 404.
  */
 function getUserTasks(userId) {
   const user = users.find(u => u.id === userId);
-  const userTasks = tasks.filter(t => t.assigneeId === user.id);
-  return userTasks;
+  if (!user) return null;
+  return tasks.filter(t => t.assigneeId === user.id);
 }
 
 module.exports = { getUsers, getUserById, getUserTasks };
