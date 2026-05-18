@@ -20,6 +20,7 @@ function getUserById(id) {
  */
 function getUserTasks(userId) {
   const user = users.find(u => u.id === userId);
+  if (!user) return null;
   const userTasks = tasks.filter(t => t.assigneeId === user.id);
   return userTasks;
 }
