@@ -14,26 +14,26 @@ function getStats() {
 }
 
 /**
- * Increment task count
+ * Increment task count.
+ *
+ * The read and write must happen in the same synchronous tick — interleaving
+ * an `await` between them allows concurrent callers to read the same value
+ * and write back the same +1, losing every increment but one. The simulated
+ * I/O delay is moved before the read so the mutation itself is atomic from
+ * the event loop's perspective.
  */
 async function incrementTaskCount() {
-  // Simulate reading from database
-  await new Promise(resolve => setTimeout(resolve, 5));
-  const currentCount = stats.totalTasks;
+  // Simulate I/O latency
+  await new Promise(resolve => setTimeout(resolve, 15));
 
-  // Simulate some processing time
-  await new Promise(resolve => setTimeout(resolve, 10));
-
-  // Simulate writing back to database
-  stats.totalTasks = currentCount + 1;
+  // Atomic read-modify-write — no await between read and write
+  stats.totalTasks = stats.totalTasks + 1;
   stats.lastUpdated = new Date().toISOString();
 }
 
 async function decrementTaskCount() {
-  await new Promise(resolve => setTimeout(resolve, 5));
-  const currentCount = stats.totalTasks;
-  await new Promise(resolve => setTimeout(resolve, 10));
-  stats.totalTasks = currentCount - 1;
+  await new Promise(resolve => setTimeout(resolve, 15));
+  stats.totalTasks = stats.totalTasks - 1;
   stats.lastUpdated = new Date().toISOString();
 }
 

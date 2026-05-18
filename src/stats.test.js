@@ -104,6 +104,24 @@ describe('Stats', () => {
     });
   });
 
+  describe('concurrency', () => {
+    it('should count every concurrent increment (regression: was losing increments to a read-modify-write race)', async () => {
+      const initial = getStats().totalTasks;
+      const N = 10;
+
+      await Promise.all(
+        Array.from({ length: N }, () => incrementTaskCount())
+      );
+
+      const final = getStats().totalTasks;
+      assert.strictEqual(
+        final,
+        initial + N,
+        `Expected ${N} concurrent increments to add ${N}, but got ${final - initial}`
+      );
+    });
+  });
+
   describe('integration', () => {
     it('should handle increment and decrement together', async () => {
       const initial = getStats().totalTasks;
