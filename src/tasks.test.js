@@ -73,7 +73,7 @@ describe('Tasks', () => {
   });
 
   describe('createTask', () => {
-    it('should create a task with provided title', async () => {
+    it('should create a task with provided title and return it as a plain object', async () => {
       const result = await createTask({
         title: 'Test Task',
         description: 'A test task',
@@ -81,7 +81,12 @@ describe('Tasks', () => {
       });
 
       assert.ok(result);
-      assert.ok(result.success || result.data);
+      assert.ok(result.id, 'response should have an id at the top level');
+      assert.strictEqual(result.title, 'Test Task');
+      assert.strictEqual(result.assigneeId, 1);
+      // Should not be wrapped in an envelope (regression: previously returned { data, success })
+      assert.strictEqual(result.data, undefined);
+      assert.strictEqual(result.success, undefined);
     });
 
     it('should create a task and increment stats', async () => {
@@ -114,9 +119,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      // Check the task was created (in the data wrapper or directly)
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.priority, 'medium');
+      assert.strictEqual(result.priority, 'medium');
     });
 
     it('should set status to pending for new tasks', async () => {
@@ -125,8 +128,7 @@ describe('Tasks', () => {
         assigneeId: 1,
       });
 
-      const taskData = result.data || result;
-      assert.strictEqual(taskData.status, 'pending');
+      assert.strictEqual(result.status, 'pending');
     });
   });
 

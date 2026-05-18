@@ -94,6 +94,27 @@ describe('Router', () => {
     });
   });
 
+  describe('POST /api/tasks', () => {
+    it('should return the created task as a plain object (regression: previously wrapped in { data, success } envelope, breaking frontend)', async () => {
+      const req = mockRequest('POST', '/api/tasks', {
+        title: 'Regression test task',
+        assigneeId: 1,
+      });
+      const result = await router(req);
+
+      assert.strictEqual(result.status, 201);
+      assert.ok(result.body, 'response body should exist');
+      // The created task fields should be at the top level, not inside `.data`
+      assert.ok(result.body.id, 'id should be at the top level');
+      assert.strictEqual(result.body.title, 'Regression test task');
+      assert.strictEqual(result.body.assigneeId, 1);
+      assert.strictEqual(result.body.status, 'pending');
+      // No envelope wrapper
+      assert.strictEqual(result.body.data, undefined);
+      assert.strictEqual(result.body.success, undefined);
+    });
+  });
+
   describe('GET /api/tasks/:id', () => {
     it('should return task when found', async () => {
       const req = mockRequest('GET', '/api/tasks/1');
